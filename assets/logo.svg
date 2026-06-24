@@ -5,15 +5,21 @@
     .tag { font-family: Georgia, serif; font-weight: 700; fill: #b11e27; letter-spacing: .03em; }
   </style>
 
-  <!-- Tornado funnel (stylized), centered between the two words -->
-  <g class="red" transform="translate(300 16)">
-    <path d="M2 6 C46 -8 104 -2 132 14 C104 8 46 6 8 18 Z"/>
-    <path d="M10 34 C48 22 96 24 118 38 C92 32 50 34 16 44 Z"/>
-    <path d="M18 60 C50 50 90 52 106 64 C86 58 52 60 24 70 Z"/>
-    <path d="M26 86 C54 78 86 80 98 90 C80 84 54 86 32 96 Z"/>
-    <path d="M36 112 C58 106 80 108 90 116 C74 110 56 112 42 122 Z"/>
-    <path d="M46 138 C62 133 78 135 84 142 C72 137 58 137 52 148 Z"/>
-    <path d="M56 164 C66 160 76 162 80 168 C71 164 64 164 60 172 Z"/>
+  <!-- Tornado funnel: stacked swirl rings, wide at top, tapering to a point -->
+  <g class="red" transform="translate(296 2)">
+    <!-- top swirl: open spiral cap -->
+    <path d="M58 16 C58 2 84 -6 112 2 C132 8 134 24 118 30 C110 16 88 10 70 16 C86 12 104 14 110 22 C98 16 74 16 58 16 Z"/>
+    <!-- banded funnel (tilted rings, narrowing to a point) -->
+    <path d="M4 20   Q74 6  142 18   Q72 30 4 20 Z"/>
+    <path d="M12 40  Q72 28 130 38   Q70 50 12 40 Z"/>
+    <path d="M20 60  Q68 50 116 58   Q66 70 20 60 Z"/>
+    <path d="M28 80  Q64 72 102 78   Q62 90 28 80 Z"/>
+    <path d="M36 99  Q60 92 88 96     Q58 108 36 99 Z"/>
+    <path d="M44 116 Q58 111 78 114   Q56 125 44 116 Z"/>
+    <path d="M50 131 Q60 127 70 130   Q56 139 50 131 Z"/>
+    <path d="M54 144 Q59 141 65 143   Q56 151 54 144 Z"/>
+    <!-- tail point -->
+    <path d="M56 154 Q59 153 61 156 Q58 163 56 154 Z"/>
   </g>
 
   <!-- Wordmark: fixed textLength so words always fit the canvas -->
