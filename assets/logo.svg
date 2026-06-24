@@ -1,29 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" role="img" aria-label="Moore Quality Air — Heating, Cooling, Plumbing">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 280" role="img" aria-label="Moore Quality Air — Heating, Cooling, Plumbing">
   <style>
-    .wm { font-family: Georgia, "Times New Roman", serif; font-weight: 700; fill: #111; }
-    .red { fill: #B11E27; }
-    .tag { font-family: Georgia, serif; font-weight:700; fill:#B11E27; letter-spacing:.04em; }
+    .wm  { font-family: Georgia, "Times New Roman", serif; font-weight: 700; fill: #111; }
+    .red { fill: #b11e27; }
+    .tag { font-family: Georgia, serif; font-weight: 700; fill: #b11e27; letter-spacing: .03em; }
   </style>
 
-  <!-- Tornado funnel (stylized) -->
-  <g class="red" transform="translate(300 14)">
-    <path d="M2 6 C40 -6 92 -2 116 12 C92 8 40 6 8 16 Z"/>
-    <path d="M8 30 C42 20 86 22 106 34 C84 30 44 30 14 38 Z"/>
-    <path d="M14 52 C44 44 80 46 96 56 C78 52 46 52 20 60 Z"/>
-    <path d="M22 74 C48 68 76 70 88 78 C72 74 48 74 28 82 Z"/>
-    <path d="M30 96 C50 92 70 94 80 100 C66 96 50 96 36 104 Z"/>
-    <path d="M40 118 C56 114 70 116 76 122 C64 118 52 118 46 126 Z"/>
-    <path d="M50 140 C60 137 68 139 72 144 C64 141 58 141 54 148 Z"/>
-    <path d="M58 162 C64 160 68 161 70 165 C65 163 62 163 60 168 Z"/>
+  <!-- Tornado funnel (stylized), centered between the two words -->
+  <g class="red" transform="translate(300 16)">
+    <path d="M2 6 C46 -8 104 -2 132 14 C104 8 46 6 8 18 Z"/>
+    <path d="M10 34 C48 22 96 24 118 38 C92 32 50 34 16 44 Z"/>
+    <path d="M18 60 C50 50 90 52 106 64 C86 58 52 60 24 70 Z"/>
+    <path d="M26 86 C54 78 86 80 98 90 C80 84 54 86 32 96 Z"/>
+    <path d="M36 112 C58 106 80 108 90 116 C74 110 56 112 42 122 Z"/>
+    <path d="M46 138 C62 133 78 135 84 142 C72 137 58 137 52 148 Z"/>
+    <path d="M56 164 C66 160 76 162 80 168 C71 164 64 164 60 172 Z"/>
   </g>
 
-  <!-- Wordmark -->
-  <text x="20"  y="92"  class="wm" font-size="92">Moore</text>
-  <text x="430" y="92"  class="wm" font-size="92">Quality</text>
-  <text x="262" y="196" class="wm" font-size="92">A</text>
-  <text x="392" y="196" class="wm" font-size="92">r</text>
+  <!-- Wordmark: fixed textLength so words always fit the canvas -->
+  <text x="20"  y="118" class="wm" font-size="96" textLength="250" lengthAdjust="spacingAndGlyphs">Moore</text>
+  <text x="448" y="118" class="wm" font-size="96" textLength="330" lengthAdjust="spacingAndGlyphs">Quality</text>
+  <text x="410" y="214" class="wm" font-size="96" textLength="150" lengthAdjust="spacingAndGlyphs" text-anchor="middle">Air</text>
 
   <!-- Divider + tagline -->
-  <rect x="20" y="222" width="640" height="4" class="red"/>
-  <text x="340" y="262" text-anchor="middle" class="tag" font-size="34">HEATING · COOLING · PLUMBING</text>
+  <rect x="20" y="238" width="780" height="5" class="red"/>
+  <text x="410" y="276" text-anchor="middle" class="tag" font-size="30" textLength="600" lengthAdjust="spacingAndGlyphs">HEATING · COOLING · PLUMBING</text>
 </svg>
