@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Moore Quality Air | 505-221-6352</title>
+  <meta name="description" content="Contact Moore Quality Air for HVAC and plumbing service in Albuquerque, Rio Rancho, Corrales and Los Lunas. Call 505-221-6352 or send us a message." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/logo.svg" />
+</head>
+<body>
+  <div class="topbar"><div class="container topbar__inner">
+    <span>📍 Serving the Greater Albuquerque Metro</span><span>🕗 Mon–Fri 8AM–5PM</span><a href="tel:+15052216352">📞 505-221-6352</a>
+  </div></div>
+  <header class="header"><div class="container header__inner">
+    <a class="brand" href="index.html" aria-label="Moore Quality Air home"><img src="assets/logo.svg" alt="Moore Quality Air" /></a>
+    <nav class="nav" aria-label="Primary">
+      <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      <ul class="nav__menu" id="nav-menu">
+        <li><a href="about.html">About</a></li>
+        <li><a href="hvac-services.html">HVAC Services</a></li>
+        <li><a href="plumbing-services.html">Plumbing</a></li>
+        <li><a href="service-area.html">Service Area</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="special-offers.html">Offers</a></li>
+        <li><a class="btn btn--small" href="tel:+15052216352">Call 505-221-6352</a></li>
+      </ul>
+    </nav>
+  </div></header>
+
+  <section class="hero hero--page"><div class="container hero__inner">
+    <p class="hero__eyebrow">Contact Us</p>
+    <h1>Comfort Is Just a Call Away</h1>
+    <p class="hero__sub">We are ready to help Monday through Friday, 8 AM to 5 PM. Existing customers and new system installations have access to emergency service when you need it most.</p>
+  </div></section>
+
+  <section class="section"><div class="container contact-grid">
+    <div>
+      <h2>Get In Touch</h2>
+      <ul class="contact-list">
+        <li><span>📞</span><div><b>Phone</b><br/><a href="tel:+15052216352">505-221-6352</a></div></li>
+        <li><span>📍</span><div><b>Address</b><br/>3301-R Coors Blvd NW, Suite 200<br/>Albuquerque, New Mexico 87120</div></li>
+        <li><span>🕗</span><div><b>Hours</b><br/>Monday–Friday: 8:00 AM – 5:00 PM<br/>Saturday: Closed · Sunday: Closed</div></li>
+        <li><span>🚨</span><div><b>Emergency Service</b><br/>Available for existing customers and homeowners with new system installations. Call 505-221-6352.</div></li>
+      </ul>
+      <div class="badges" style="margin-top:1rem">
+        <span>NM MM-98</span><span>NM EE-98</span><span>Universal EPA</span><span>Journeyman Licensed</span><span>Rheem Pro Partner</span>
+      </div>
+    </div>
+
+    <form class="card" id="contact-form" novalidate>
+      <h3 style="margin-top:0">Request a Free Estimate</h3>
+      <div class="field-row">
+        <div class="field"><label for="firstName">First Name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" required /></div>
+        <div class="field"><label for="lastName">Last Name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" required /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="phone">Phone Number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required /></div>
+        <div class="field"><label for="email">Email Address *</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+      </div>
+      <div class="field"><label for="city">City *</label>
+        <select id="city" name="city" required>
+          <option value="">Select your city…</option>
+          <option>Albuquerque</option><option>Rio Rancho</option><option>Corrales</option>
+          <option>Los Lunas</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label for="service">Service Needed *</label>
+        <select id="service" name="service" required>
+          <option value="">Select a service…</option>
+          <option>HVAC Conversion</option><option>Swamp Cooler</option><option>Air Conditioning</option>
+          <option>Furnace</option><option>Heat Pump</option><option>Plumbing</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label for="message">Tell Us About Your Project</label><textarea id="message" name="message" rows="4"></textarea></div>
+      <button class="btn btn--lg btn--block" type="submit">Send My Request</button>
+      <p class="form__note" id="form-note" role="status" aria-live="polite"></p>
+    </form>
+  </div></section>
+
+  <footer class="footer"><div class="container">
+    <div class="footer__inner">
+      <div><img src="assets/logo.svg" alt="Moore Quality Air" /><p>Family-owned heating, cooling and plumbing experts serving the greater Albuquerque area since 2013. Comfort is just a call away.</p><div class="badges"><span>MM-98</span><span>EE-98</span><span>EPA Certified</span><span>Rheem Pro Partner</span><span>NATE</span></div></div>
+      <div><h4>Services</h4><ul><li><a href="hvac-services.html">HVAC Services</a></li><li><a href="plumbing-services.html">Plumbing Services</a></li><li><a href="hvac-services.html#conversions">Swamp Cooler Conversions</a></li><li><a href="special-offers.html">Special Offers</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="service-area.html">Service Area</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="tel:+15052216352">505-221-6352</a></li><li>3301-R Coors Blvd NW, Suite 200<br/>Albuquerque, NM 87120</li><li>Mon–Fri: 8AM–5PM</li><li><a href="license.html">License Information</a></li></ul></div>
+    </div>
+    <div class="footer__bottom"><p>&copy; <span id="year"></span> Moore Quality Air. All rights reserved. NM Lic. MM-98 &amp; EE-98.</p><p>Comfort Is Just a Call Away.</p></div>
+  </div></footer>
+  <script src="script.js"></script>
+</body>
+</html>

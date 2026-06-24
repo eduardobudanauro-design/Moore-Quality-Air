@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" role="img" aria-label="Moore Quality Air — Heating, Cooling, Plumbing">
+  <style>
+    .wm { font-family: Georgia, "Times New Roman", serif; font-weight: 700; fill: #111; }
+    .red { fill: #B11E27; }
+    .tag { font-family: Georgia, serif; font-weight:700; fill:#B11E27; letter-spacing:.04em; }
+  </style>
+
+  <!-- Tornado funnel (stylized) -->
+  <g class="red" transform="translate(300 14)">
+    <path d="M2 6 C40 -6 92 -2 116 12 C92 8 40 6 8 16 Z"/>
+    <path d="M8 30 C42 20 86 22 106 34 C84 30 44 30 14 38 Z"/>
+    <path d="M14 52 C44 44 80 46 96 56 C78 52 46 52 20 60 Z"/>
+    <path d="M22 74 C48 68 76 70 88 78 C72 74 48 74 28 82 Z"/>
+    <path d="M30 96 C50 92 70 94 80 100 C66 96 50 96 36 104 Z"/>
+    <path d="M40 118 C56 114 70 116 76 122 C64 118 52 118 46 126 Z"/>
+    <path d="M50 140 C60 137 68 139 72 144 C64 141 58 141 54 148 Z"/>
+    <path d="M58 162 C64 160 68 161 70 165 C65 163 62 163 60 168 Z"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="20"  y="92"  class="wm" font-size="92">Moore</text>
+  <text x="430" y="92"  class="wm" font-size="92">Quality</text>
+  <text x="262" y="196" class="wm" font-size="92">A</text>
+  <text x="392" y="196" class="wm" font-size="92">r</text>
+
+  <!-- Divider + tagline -->
+  <rect x="20" y="222" width="640" height="4" class="red"/>
+  <text x="340" y="262" text-anchor="middle" class="tag" font-size="34">HEATING · COOLING · PLUMBING</text>
+</svg>
