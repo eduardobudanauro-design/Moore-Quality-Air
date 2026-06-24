@@ -1,42 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" role="img" aria-label="Moore Quality Air">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 360" role="img" aria-label="Moore Quality Air">
   <style>
     .wm { font-family: Georgia, "Times New Roman", serif; font-weight: 700; fill: #111; }
   </style>
 
-  <!-- ===== Tornado funnel ===== -->
+  <!-- ===== Tornado funnel (centered ~x=372, clear of the words) ===== -->
   <g>
     <!-- cone body -->
-    <path fill="#9e1b22" d="
-      M286 100
-      C282 82 318 74 352 76
-      C392 78 426 86 420 104
-      C410 156 392 220 362 300
-      L352 318
-      L344 300
-      C320 220 302 156 286 100 Z"/>
-    <!-- top curl -->
-    <path fill="#9e1b22" d="
-      M352 76
-      C360 54 396 50 410 66
-      C422 80 414 98 396 98
-      C408 90 408 72 392 70
-      C376 68 366 80 360 92 Z"/>
+    <path fill="#cc1326" d="
+      M308 100
+      C304 82 340 74 372 76
+      C410 78 440 86 434 104
+      C424 156 406 222 380 302
+      L372 320
+      L364 302
+      C340 222 322 156 308 100 Z"/>
+    <!-- top curl (inward spiral) -->
+    <path fill="#cc1326" d="
+      M372 76
+      C381 55 412 53 425 69
+      C434 81 426 96 409 94
+      C419 88 417 72 403 71
+      C389 70 379 80 373 91 Z"/>
     <!-- white spiral bands (the wraps) -->
     <g fill="none" stroke="#ffffff" stroke-linecap="round">
-      <path stroke-width="7" d="M292 116 Q352 132 414 114"/>
-      <path stroke-width="7" d="M300 142 Q352 158 406 140"/>
-      <path stroke-width="6" d="M308 168 Q352 182 398 166"/>
-      <path stroke-width="6" d="M316 194 Q352 206 390 192"/>
-      <path stroke-width="5" d="M324 220 Q352 230 382 218"/>
-      <path stroke-width="5" d="M332 246 Q352 254 374 244"/>
-      <path stroke-width="4" d="M340 272 Q352 279 366 270"/>
+      <path stroke-width="7" d="M314 116 Q372 132 430 113"/>
+      <path stroke-width="7" d="M322 142 Q372 158 423 139"/>
+      <path stroke-width="6" d="M330 168 Q372 182 415 165"/>
+      <path stroke-width="6" d="M338 194 Q372 206 407 191"/>
+      <path stroke-width="5" d="M346 220 Q372 230 399 217"/>
+      <path stroke-width="5" d="M355 246 Q372 254 390 243"/>
+      <path stroke-width="4" d="M362 272 Q372 279 383 270"/>
     </g>
   </g>
 
   <!-- ===== Wordmark ===== -->
-  <text x="8"   y="206" class="wm" font-size="96" textLength="248" lengthAdjust="spacingAndGlyphs">Moore</text>
-  <text x="442" y="206" class="wm" font-size="96" textLength="330" lengthAdjust="spacingAndGlyphs">Quality</text>
+  <text x="14"  y="206" class="wm" font-size="96" textLength="246" lengthAdjust="spacingAndGlyphs">Moore</text>
+  <text x="466" y="206" class="wm" font-size="96" textLength="326" lengthAdjust="spacingAndGlyphs">Quality</text>
   <!-- "Air": A and r flank the funnel point (the funnel is the 'i') -->
-  <text x="250" y="330" class="wm" font-size="96">A</text>
-  <text x="372" y="330" class="wm" font-size="96">r</text>
+  <text x="282" y="330" class="wm" font-size="96">A</text>
+  <text x="400" y="330" class="wm" font-size="96">r</text>
 </svg>
