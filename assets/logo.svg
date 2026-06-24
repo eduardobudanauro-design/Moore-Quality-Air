@@ -1,33 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 280" role="img" aria-label="Moore Quality Air — Heating, Cooling, Plumbing">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" role="img" aria-label="Moore Quality Air">
   <style>
-    .wm  { font-family: Georgia, "Times New Roman", serif; font-weight: 700; fill: #111; }
-    .red { fill: #b11e27; }
-    .tag { font-family: Georgia, serif; font-weight: 700; fill: #b11e27; letter-spacing: .03em; }
+    .wm { font-family: Georgia, "Times New Roman", serif; font-weight: 700; fill: #111; }
   </style>
 
-  <!-- Tornado funnel: stacked swirl rings, wide at top, tapering to a point -->
-  <g class="red" transform="translate(296 2)">
-    <!-- top swirl: open spiral cap -->
-    <path d="M58 16 C58 2 84 -6 112 2 C132 8 134 24 118 30 C110 16 88 10 70 16 C86 12 104 14 110 22 C98 16 74 16 58 16 Z"/>
-    <!-- banded funnel (tilted rings, narrowing to a point) -->
-    <path d="M4 20   Q74 6  142 18   Q72 30 4 20 Z"/>
-    <path d="M12 40  Q72 28 130 38   Q70 50 12 40 Z"/>
-    <path d="M20 60  Q68 50 116 58   Q66 70 20 60 Z"/>
-    <path d="M28 80  Q64 72 102 78   Q62 90 28 80 Z"/>
-    <path d="M36 99  Q60 92 88 96     Q58 108 36 99 Z"/>
-    <path d="M44 116 Q58 111 78 114   Q56 125 44 116 Z"/>
-    <path d="M50 131 Q60 127 70 130   Q56 139 50 131 Z"/>
-    <path d="M54 144 Q59 141 65 143   Q56 151 54 144 Z"/>
-    <!-- tail point -->
-    <path d="M56 154 Q59 153 61 156 Q58 163 56 154 Z"/>
+  <!-- ===== Tornado funnel ===== -->
+  <g>
+    <!-- cone body -->
+    <path fill="#9e1b22" d="
+      M286 100
+      C282 82 318 74 352 76
+      C392 78 426 86 420 104
+      C410 156 392 220 362 300
+      L352 318
+      L344 300
+      C320 220 302 156 286 100 Z"/>
+    <!-- top curl -->
+    <path fill="#9e1b22" d="
+      M352 76
+      C360 54 396 50 410 66
+      C422 80 414 98 396 98
+      C408 90 408 72 392 70
+      C376 68 366 80 360 92 Z"/>
+    <!-- white spiral bands (the wraps) -->
+    <g fill="none" stroke="#ffffff" stroke-linecap="round">
+      <path stroke-width="7" d="M292 116 Q352 132 414 114"/>
+      <path stroke-width="7" d="M300 142 Q352 158 406 140"/>
+      <path stroke-width="6" d="M308 168 Q352 182 398 166"/>
+      <path stroke-width="6" d="M316 194 Q352 206 390 192"/>
+      <path stroke-width="5" d="M324 220 Q352 230 382 218"/>
+      <path stroke-width="5" d="M332 246 Q352 254 374 244"/>
+      <path stroke-width="4" d="M340 272 Q352 279 366 270"/>
+    </g>
   </g>
 
-  <!-- Wordmark: fixed textLength so words always fit the canvas -->
-  <text x="20"  y="118" class="wm" font-size="96" textLength="250" lengthAdjust="spacingAndGlyphs">Moore</text>
-  <text x="448" y="118" class="wm" font-size="96" textLength="330" lengthAdjust="spacingAndGlyphs">Quality</text>
-  <text x="410" y="214" class="wm" font-size="96" textLength="150" lengthAdjust="spacingAndGlyphs" text-anchor="middle">Air</text>
-
-  <!-- Divider + tagline -->
-  <rect x="20" y="238" width="780" height="5" class="red"/>
-  <text x="410" y="276" text-anchor="middle" class="tag" font-size="30" textLength="600" lengthAdjust="spacingAndGlyphs">HEATING · COOLING · PLUMBING</text>
+  <!-- ===== Wordmark ===== -->
+  <text x="8"   y="206" class="wm" font-size="96" textLength="248" lengthAdjust="spacingAndGlyphs">Moore</text>
+  <text x="442" y="206" class="wm" font-size="96" textLength="330" lengthAdjust="spacingAndGlyphs">Quality</text>
+  <!-- "Air": A and r flank the funnel point (the funnel is the 'i') -->
+  <text x="250" y="330" class="wm" font-size="96">A</text>
+  <text x="372" y="330" class="wm" font-size="96">r</text>
 </svg>
