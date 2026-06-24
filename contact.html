@@ -52,8 +52,11 @@
       </div>
     </div>
 
-    <form class="card" id="contact-form" novalidate>
+    <form class="card" id="contact-form" method="POST" action="https://formspree.io/f/YOUR_FORM_ID" novalidate>
       <h3 style="margin-top:0">Request a Free Estimate</h3>
+      <!-- Spam honeypot (hidden from people, bots fill it) -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true" />
+      <input type="hidden" name="_subject" value="New website estimate request — Moore Quality Air" />
       <div class="field-row">
         <div class="field"><label for="firstName">First Name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" required /></div>
         <div class="field"><label for="lastName">Last Name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" required /></div>
