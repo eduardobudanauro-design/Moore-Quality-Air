@@ -146,6 +146,8 @@ def process_turn(
     history.append({"role": "user", "content": user_text})
     reply_text = ""
 
+    turn_start_len = len(history)
+
     while True:
         tool_calls = []
         text_chunks = []
@@ -169,12 +171,13 @@ def process_turn(
                 tool_calls.append(data)
             elif event_type == "message_stop":
                 final_message = data
-                # Log token usage
                 if hasattr(data, "usage") and data.usage:
                     total_input_tokens += getattr(data.usage, "input_tokens", 0)
                     total_output_tokens += getattr(data.usage, "output_tokens", 0)
             elif event_type == "error":
                 print(f"\n[Error] {data}", flush=True)
+                # Roll back history to before this turn so corruption doesn't persist
+                history[:] = history[:turn_start_len]
                 return str(data)
 
         reply_text = "".join(text_chunks)
