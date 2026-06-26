@@ -22,12 +22,8 @@ import wave
 import threading
 from typing import Callable
 
+import httpx
 import pyaudio
-from deepgram import DeepgramClient
-try:
-    from deepgram import PrerecordedOptions
-except ImportError:
-    PrerecordedOptions = None
 
 
 # Audio capture settings
@@ -41,36 +37,38 @@ FORMAT = pyaudio.paInt16
 
 def transcribe(audio_bytes: bytes) -> str:
     """
-    Send raw PCM audio bytes to Deepgram and return the transcript.
-    This is the only function that touches the Deepgram SDK.
+    Send raw PCM audio to Deepgram via direct HTTP — no SDK, works on any Python version.
     """
     key = os.environ.get("DEEPGRAM_API_KEY")
     if not key:
         raise EnvironmentError("DEEPGRAM_API_KEY is not set. Add it to jarvis/.env")
 
-    client = DeepgramClient(key)
-
-    # Wrap raw PCM in a WAV container so Deepgram knows the format
+    # Wrap raw PCM in a WAV container
     wav_buffer = io.BytesIO()
     with wave.open(wav_buffer, "wb") as wf:
         wf.setnchannels(CHANNELS)
-        wf.setsampwidth(2)  # 16-bit = 2 bytes
+        wf.setsampwidth(2)
         wf.setframerate(SAMPLE_RATE)
         wf.writeframes(audio_bytes)
     wav_buffer.seek(0)
 
-    options = {"model": "nova-2", "smart_format": True, "language": "en-US"}
-    if PrerecordedOptions is not None:
-        options = PrerecordedOptions(**options)
-
-    response = client.listen.prerecorded.v("1").transcribe_file(
-        {"buffer": wav_buffer, "mimetype": "audio/wav"},
-        options,
+    response = httpx.post(
+        "https://api.deepgram.com/v1/listen?model=nova-2&smart_format=true&language=en-US",
+        headers={
+            "Authorization": f"Token {key}",
+            "Content-Type": "audio/wav",
+        },
+        content=wav_buffer.read(),
+        timeout=30,
     )
+
+    if response.status_code != 200:
+        print(f"\n  [STT error: HTTP {response.status_code}]", flush=True)
+        return ""
+
     try:
-        transcript = response.results.channels[0].alternatives[0].transcript
-        return transcript.strip()
-    except (AttributeError, IndexError):
+        return response.json()["results"]["channels"][0]["alternatives"][0]["transcript"].strip()
+    except (KeyError, IndexError):
         return ""
 
 
