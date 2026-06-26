@@ -1,10 +1,10 @@
 """
 Voice output — the mouth.
-Calls ElevenLabs API directly via httpx, decodes MP3 with pydub, plays with pyaudio.
+Requests PCM audio directly from ElevenLabs (output_format=pcm_44100),
+plays raw bytes with pyaudio. No ffmpeg, no pydub, no audioop needed.
 """
 
 import os
-import io
 import threading
 import httpx
 import pyaudio
@@ -43,6 +43,7 @@ def speak(text: str, voice_id: str = "") -> None:
             json={
                 "text": text,
                 "model_id": "eleven_turbo_v2",
+                "output_format": "pcm_44100",
                 "voice_settings": {
                     "stability": 0.5,
                     "similarity_boost": 0.75,
@@ -55,21 +56,7 @@ def speak(text: str, voice_id: str = "") -> None:
             print(f"\n  [TTS error: HTTP {response.status_code}]", flush=True)
             return
 
-        # Decode MP3 to raw PCM using ffmpeg subprocess (avoids audioop / pydub)
-        import subprocess
-        result = subprocess.run(
-            [
-                "ffmpeg", "-y",
-                "-i", "pipe:0",
-                "-f", "s16le",
-                "-ar", "44100",
-                "-ac", "1",
-                "pipe:1",
-            ],
-            input=response.content,
-            capture_output=True,
-        )
-        pcm_data = result.stdout
+        pcm_data = response.content
 
         pa = pyaudio.PyAudio()
         stream = pa.open(
