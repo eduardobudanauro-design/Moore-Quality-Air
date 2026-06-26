@@ -38,7 +38,7 @@ def speak(text: str, voice_id: str = "") -> None:
     headers = {
         "xi-api-key": key,
         "Content-Type": "application/json",
-        "Accept": "audio/pcm; sample_rate=22050",
+        "Accept": "audio/pcm; sample_rate=44100",
     }
     payload = {
         "text": text,
@@ -47,7 +47,7 @@ def speak(text: str, voice_id: str = "") -> None:
             "stability": 0.5,
             "similarity_boost": 0.75,
         },
-        "output_format": "pcm_22050",
+        "output_format": "pcm_44100",
     }
 
     try:
@@ -55,9 +55,9 @@ def speak(text: str, voice_id: str = "") -> None:
         stream = pa.open(
             format=pyaudio.paInt16,
             channels=1,
-            rate=22050,
+            rate=44100,
             output=True,
-            frames_per_buffer=2048,
+            frames_per_buffer=4096,
         )
 
         try:
