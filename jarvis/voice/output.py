@@ -35,7 +35,7 @@ def speak(text: str, voice_id: str = "") -> None:
 
     try:
         response = httpx.post(
-            f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}",
+            f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}?output_format=pcm_44100",
             headers={
                 "xi-api-key": key,
                 "Content-Type": "application/json",
@@ -43,7 +43,6 @@ def speak(text: str, voice_id: str = "") -> None:
             json={
                 "text": text,
                 "model_id": "eleven_turbo_v2",
-                "output_format": "pcm_44100",
                 "voice_settings": {
                     "stability": 0.5,
                     "similarity_boost": 0.75,

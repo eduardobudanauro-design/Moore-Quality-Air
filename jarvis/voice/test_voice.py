@@ -16,7 +16,7 @@ voice_id = "onwK4e9ZLuTAKqWW03F9"
 
 print("Calling ElevenLabs API...")
 response = httpx.post(
-    f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+    f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=pcm_44100",
     headers={
         "xi-api-key": key,
         "Content-Type": "application/json",
@@ -24,7 +24,6 @@ response = httpx.post(
     json={
         "text": "Hello Eduardo, Jarvis is online.",
         "model_id": "eleven_turbo_v2",
-        "output_format": "pcm_44100",
     },
     timeout=30,
 )
