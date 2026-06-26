@@ -1,10 +1,13 @@
 """
 Voice output — the mouth.
-Streams ElevenLabs TTS and plays audio as it arrives.
+Calls ElevenLabs API directly via httpx, requests PCM audio, plays with pyaudio.
+No ElevenLabs SDK needed — works with any Python version.
 """
 
 import os
+import io
 import threading
+import httpx
 import pyaudio
 
 is_speaking = threading.Event()
@@ -31,28 +34,23 @@ def speak(text: str, voice_id: str = "") -> None:
     interrupt_flag.clear()
     is_speaking.set()
 
-    try:
-        # Support both old and new ElevenLabs SDK versions
-        try:
-            from elevenlabs.client import ElevenLabs
-            client = ElevenLabs(api_key=key)
-            audio_stream = client.text_to_speech.convert(
-                voice_id=resolved_voice,
-                text=text,
-                model_id="eleven_turbo_v2",
-                output_format="pcm_22050",
-            )
-        except Exception:
-            # Fallback for older SDK versions
-            from elevenlabs import generate, stream as el_stream, set_api_key
-            set_api_key(key)
-            audio_stream = generate(
-                text=text,
-                voice=resolved_voice,
-                model="eleven_turbo_v2",
-                stream=True,
-            )
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}/stream"
+    headers = {
+        "xi-api-key": key,
+        "Content-Type": "application/json",
+        "Accept": "audio/pcm; sample_rate=22050",
+    }
+    payload = {
+        "text": text,
+        "model_id": "eleven_turbo_v2",
+        "voice_settings": {
+            "stability": 0.5,
+            "similarity_boost": 0.75,
+        },
+        "output_format": "pcm_22050",
+    }
 
+    try:
         pa = pyaudio.PyAudio()
         stream = pa.open(
             format=pyaudio.paInt16,
@@ -63,11 +61,16 @@ def speak(text: str, voice_id: str = "") -> None:
         )
 
         try:
-            for chunk in audio_stream:
-                if interrupt_flag.is_set():
-                    break
-                if chunk:
-                    stream.write(chunk)
+            with httpx.stream("POST", url, headers=headers, json=payload, timeout=30) as response:
+                if response.status_code != 200:
+                    body = response.read()
+                    print(f"\n  [TTS error: HTTP {response.status_code} — {body[:200]}]", flush=True)
+                    return
+                for chunk in response.iter_bytes(chunk_size=4096):
+                    if interrupt_flag.is_set():
+                        break
+                    if chunk:
+                        stream.write(chunk)
         finally:
             stream.stop_stream()
             stream.close()
