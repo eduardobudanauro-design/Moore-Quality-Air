@@ -80,4 +80,4 @@ jarvis/
 - [x] Tier 3 — Push-to-talk (spacebar) + wake word "Jarvis" (Deepgram STT + ElevenLabs TTS — Daniel voice)
 - [x] Tier 4 — Memory across restarts (durable fact store, auto-loaded into system prompt)
 - [x] Tier 5 — Heartbeat / proactive loop (scheduled checks, durable inbox, kill switch)
-- [ ] Tier 6 — Safety rails, confirmation gate, config, audit log
+- [x] Tier 6 — Safety rails, confirmation gate, injection detection, audit log, kill switch

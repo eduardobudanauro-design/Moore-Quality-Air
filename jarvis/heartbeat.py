@@ -291,7 +291,15 @@ class Heartbeat:
         if quiet and not entry.urgent:
             logger.info(f"Quiet hours — holding notice from '{entry.name}'")
             # Still post it — it'll be there when Eduardo opens the interface
+
         post_notice(notice)
+
+        # Mirror to audit log
+        try:
+            import safety
+            safety.log_notice(entry.name, str(result), entry.urgent)
+        except Exception:
+            pass
 
 
 # Singleton

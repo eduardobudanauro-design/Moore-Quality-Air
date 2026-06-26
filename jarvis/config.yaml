@@ -1,10 +1,10 @@
-# Jarvis configuration — edit here, never in source code
+# Jarvis configuration — edit here, never in source code.
+# Every tunable value lives here. No literals buried in .py files.
 
 brain:
   model: claude-sonnet-4-6
   max_tokens: 1024
-  # Max conversation turns kept in memory before oldest are trimmed
-  max_history_turns: 40
+  max_history_turns: 40        # turns kept in session memory before trimming
 
 identity:
   name: Jarvis
@@ -19,18 +19,23 @@ personality: |
   Keep replies concise unless Eduardo asks you to go deep. When you don't know
   something, say so plainly. When you have an opinion, share it.
 
-# Actions that require explicit confirmation before running
-# Sending messages is intentionally NOT on this list — Jarvis can send freely
+# ── Safety ────────────────────────────────────────────────────────────────────
+# Tools whose names contain any of these strings require explicit confirmation
+# before running. One yes per action — never carries forward.
+# Sending messages is intentionally NOT listed — Jarvis can send freely.
 confirmation_required:
   - spend_money
   - delete_data
   - change_setting
   - any_irreversible_action
+  - delete_file
+  - delete_note
 
+# ── Heartbeat ─────────────────────────────────────────────────────────────────
 heartbeat:
   enabled: true
-  tick_seconds: 60        # how often the engine wakes to check what's due
-  quiet_hours_start: "22:00"
+  tick_seconds: 60             # how often the engine wakes to check what's due
+  quiet_hours_start: "22:00"   # no non-urgent notices after this
   quiet_hours_end: "07:00"
 
   # Per-check interval overrides (seconds). Remove a key to use the coded default.
@@ -39,16 +44,18 @@ heartbeat:
     revenue_nudge: 86400         # once a day
     stale_notes_alert: 43200     # twice a day
 
+# ── Voice ─────────────────────────────────────────────────────────────────────
 voice:
-  enabled: false          # set to true when running Tier 3+
-  push_to_talk_key: space  # hold this key to speak in PTT mode
-  wake_word: "jarvis"      # say this to activate open-mic mode
-  wake_word_sensitivity: 0.5  # 0.0 (less sensitive) to 1.0 (more sensitive)
-  show_transcript: true    # print what Jarvis heard, for debugging
-  tts_voice_id: "onwK4e9ZLuTAKqWW03F9"  # Daniel — deep British male (ElevenLabs default)
-  mode: push_to_talk       # push_to_talk | wake_word | text
+  enabled: false               # set to true when running with voice dependencies
+  push_to_talk_key: space
+  wake_word: "jarvis"
+  wake_word_sensitivity: 0.5   # 0.0 = less sensitive, 1.0 = most sensitive
+  show_transcript: true        # print what Jarvis heard (good for debugging)
+  tts_voice_id: "onwK4e9ZLuTAKqWW03F9"  # Daniel — deep British male (ElevenLabs)
+  mode: push_to_talk           # push_to_talk | wake_word | text
 
+# ── Logging / audit ───────────────────────────────────────────────────────────
 logging:
-  log_file: jarvis.log
-  show_tool_calls: true
-  show_costs: true
+  log_file: jarvis.log         # append-only audit trail (git-ignored)
+  show_tool_calls: true        # print [tool → name] during conversation
+  show_costs: true             # log token counts to jarvis.log
