@@ -23,7 +23,11 @@ import threading
 from typing import Callable
 
 import pyaudio
-from deepgram import DeepgramClient, PrerecordedOptions
+from deepgram import DeepgramClient
+try:
+    from deepgram import PrerecordedOptions
+except ImportError:
+    PrerecordedOptions = None
 
 
 # Audio capture settings
@@ -55,11 +59,10 @@ def transcribe(audio_bytes: bytes) -> str:
         wf.writeframes(audio_bytes)
     wav_buffer.seek(0)
 
-    options = PrerecordedOptions(
-        model="nova-2",
-        smart_format=True,
-        language="en-US",
-    )
+    options = {"model": "nova-2", "smart_format": True, "language": "en-US"}
+    if PrerecordedOptions is not None:
+        options = PrerecordedOptions(**options)
+
     response = client.listen.prerecorded.v("1").transcribe_file(
         {"buffer": wav_buffer, "mimetype": "audio/wav"},
         options,
