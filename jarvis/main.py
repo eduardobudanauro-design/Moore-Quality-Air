@@ -295,6 +295,7 @@ def run_ptt_loop(cfg: dict, system: str) -> None:
             if reply:
                 t = threading.Thread(target=speak, args=(reply, voice_id), daemon=True)
                 t.start()
+                t.join()  # wait for Daniel to finish before listening again
 
         except KeyboardInterrupt:
             interrupt_speech()
