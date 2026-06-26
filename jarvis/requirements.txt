@@ -1,3 +1,10 @@
 anthropic>=0.25.0
 python-dotenv>=1.0.0
 pyyaml>=6.0
+
+# Voice layer (Tier 3) — install only when setting up voice
+deepgram-sdk>=3.2.0
+elevenlabs>=1.3.0
+pyaudio>=0.2.14
+pynput>=1.7.6
+pvporcupine>=3.0.0

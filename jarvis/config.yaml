@@ -20,10 +20,8 @@ personality: |
   something, say so plainly. When you have an opinion, share it.
 
 # Actions that require explicit confirmation before running
+# Sending messages is intentionally NOT on this list — Jarvis can send freely
 confirmation_required:
-  - send_message
-  - send_email
-  - post_to_social
   - spend_money
   - delete_data
   - change_setting
@@ -36,9 +34,13 @@ heartbeat:
   quiet_hours_end: "07:00"
 
 voice:
-  enabled: false          # enabled in Tier 3
-  push_to_talk_key: space
-  show_transcript: true
+  enabled: false          # set to true when running Tier 3+
+  push_to_talk_key: space  # hold this key to speak in PTT mode
+  wake_word: "jarvis"      # say this to activate open-mic mode
+  wake_word_sensitivity: 0.5  # 0.0 (less sensitive) to 1.0 (more sensitive)
+  show_transcript: true    # print what Jarvis heard, for debugging
+  tts_voice_id: "onwK4e9ZLuTAKqWW03F9"  # Daniel — deep British male (ElevenLabs default)
+  mode: push_to_talk       # push_to_talk | wake_word | text
 
 logging:
   log_file: jarvis.log

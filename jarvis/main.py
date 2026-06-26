@@ -1,18 +1,27 @@
 #!/usr/bin/env python3
 """
 Jarvis — entry point.
-Run: python main.py
+
+Run:
+  python main.py              # text mode (default)
+  python main.py --voice ptt  # push-to-talk
+  python main.py --voice wake # open-mic wake word ("Jarvis")
+  python main.py --voice      # uses mode from config.yaml
+
+The brain (brain.py) and tools (tools/) are identical in all modes.
+Voice is a wrapper around the same process_turn() — not a fork.
 """
 
+import argparse
 import json
 import os
 import sys
+import threading
 from pathlib import Path
 
 import yaml
 from dotenv import load_dotenv
 
-# Load secrets before anything else
 load_dotenv(Path(__file__).parent / ".env")
 
 import brain
@@ -43,7 +52,6 @@ def build_system_prompt(cfg: dict) -> str:
 
 
 def run_tool_call(block, cfg: dict) -> str:
-    """Run one tool call block and return the result string."""
     name = block.name
     inputs = block.input
 
@@ -65,13 +73,12 @@ def run_tool_call(block, cfg: dict) -> str:
 
 def process_turn(user_text: str, history: list[dict], system: str, cfg: dict) -> str:
     """
-    Run one full turn: user text → (possibly multiple tool rounds) → final reply.
-    Streams output to stdout as it arrives.
-    Returns the final assistant reply text.
+    One full turn: user text → (tool rounds) → final reply.
+    Streams text to stdout. Returns the full reply string.
+    Voice callers use the returned string; text callers rely on the streaming print.
     """
     brain_cfg = cfg["brain"]
     history.append({"role": "user", "content": user_text})
-
     reply_text = ""
 
     while True:
@@ -101,15 +108,12 @@ def process_turn(user_text: str, history: list[dict], system: str, cfg: dict) ->
 
         reply_text = "".join(text_chunks)
 
-        # No tool calls — we're done
         if not tool_calls:
-            print()  # newline after streamed reply
+            print()
             break
 
-        # Append the assistant message (with tool_use blocks) to history
         history.append({"role": "assistant", "content": final_message.content})
 
-        # Run each tool and build the tool_result message
         tool_results = []
         for block in tool_calls:
             result_str = run_tool_call(block, cfg)
@@ -120,13 +124,10 @@ def process_turn(user_text: str, history: list[dict], system: str, cfg: dict) ->
             })
 
         history.append({"role": "user", "content": tool_results})
-        # Loop back — let the model react to the tool results
 
-    # Append final assistant reply to history
     if reply_text:
         history.append({"role": "assistant", "content": reply_text})
 
-    # Trim history if it grows too long (keep system + last N turns)
     max_turns = brain_cfg.get("max_history_turns", 40)
     if len(history) > max_turns * 2:
         history[:] = history[-(max_turns * 2):]
@@ -134,9 +135,9 @@ def process_turn(user_text: str, history: list[dict], system: str, cfg: dict) ->
     return reply_text
 
 
-def main():
-    cfg = load_config()
-    system = build_system_prompt(cfg)
+# ─── Text loop ────────────────────────────────────────────────────────────────
+
+def run_text_loop(cfg: dict, system: str) -> None:
     history: list[dict] = []
     name = cfg["identity"]["name"]
 
@@ -149,16 +150,155 @@ def main():
         try:
             user_input = input("You: ").strip()
         except (KeyboardInterrupt, EOFError):
-            print(f"\n\n{name}: Catch you later, Eduardo. Go get that 8K. 💪")
+            print(f"\n\n{name}: Catch you later, Eduardo. Go get that 8K.")
             sys.exit(0)
 
         if not user_input:
             continue
         if user_input.lower() in ("quit", "exit", "bye"):
-            print(f"\n{name}: Later, Eduardo. 🤝")
+            print(f"\n{name}: Later, Eduardo.")
             sys.exit(0)
 
         process_turn(user_input, history, system, cfg)
+
+
+# ─── Push-to-talk loop ────────────────────────────────────────────────────────
+
+def run_ptt_loop(cfg: dict, system: str) -> None:
+    from voice.input import listen_push_to_talk
+    from voice.output import speak, interrupt_speech, is_speaking
+
+    history: list[dict] = []
+    name = cfg["identity"]["name"]
+    voice_cfg = cfg.get("voice", {})
+    voice_id = voice_cfg.get("tts_voice_id", "")
+    show_transcript = voice_cfg.get("show_transcript", True)
+
+    print(f"\n{'='*50}")
+    print(f"  {name} — Push-to-talk mode")
+    print(f"  Hold SPACE to speak. Ctrl+C to exit.")
+    print(f"{'='*50}\n")
+
+    while True:
+        try:
+            # If Jarvis is still speaking when we start a new cycle, interrupt it
+            if is_speaking.is_set():
+                interrupt_speech()
+                is_speaking.wait(timeout=0.5)
+
+            transcript = listen_push_to_talk(
+                on_listening=lambda: print("  [Recording…]", flush=True)
+            )
+
+            if not transcript:
+                print("  (didn't catch that — try again)\n")
+                continue
+
+            if show_transcript:
+                print(f"\nYou said: {transcript}")
+
+            # Start TTS in a thread so we can interrupt it if needed
+            reply = process_turn(transcript, history, system, cfg)
+
+            if reply:
+                tts_thread = threading.Thread(
+                    target=speak, args=(reply, voice_id), daemon=True
+                )
+                tts_thread.start()
+
+        except KeyboardInterrupt:
+            interrupt_speech()
+            print(f"\n\n{name}: Catch you later, Eduardo.")
+            sys.exit(0)
+
+
+# ─── Wake-word loop ───────────────────────────────────────────────────────────
+
+def run_wake_word_loop(cfg: dict, system: str) -> None:
+    from voice.input import listen_wake_word
+    from voice.output import speak, interrupt_speech, is_speaking
+
+    history: list[dict] = []
+    name = cfg["identity"]["name"]
+    voice_cfg = cfg.get("voice", {})
+    voice_id = voice_cfg.get("tts_voice_id", "")
+    sensitivity = voice_cfg.get("wake_word_sensitivity", 0.5)
+    show_transcript = voice_cfg.get("show_transcript", True)
+
+    print(f"\n{'='*50}")
+    print(f"  {name} — Wake-word mode")
+    print(f"  Say 'Jarvis' to activate. Ctrl+C to exit.")
+    print(f"{'='*50}\n")
+
+    while True:
+        try:
+            if is_speaking.is_set():
+                interrupt_speech()
+                is_speaking.wait(timeout=0.5)
+
+            transcript = listen_wake_word(
+                sensitivity=sensitivity,
+                on_detected=lambda: print("  [Activated — speak now…]", flush=True),
+            )
+
+            if not transcript:
+                print("  (didn't catch that — say 'Jarvis' to try again)\n")
+                continue
+
+            if show_transcript:
+                print(f"\nYou said: {transcript}")
+
+            reply = process_turn(transcript, history, system, cfg)
+
+            if reply:
+                tts_thread = threading.Thread(
+                    target=speak, args=(reply, voice_id), daemon=True
+                )
+                tts_thread.start()
+                # Don't start the next wake-word listen until TTS finishes
+                # (prevents Jarvis from hearing itself)
+                tts_thread.join()
+
+        except KeyboardInterrupt:
+            interrupt_speech()
+            print(f"\n\n{name}: Catch you later, Eduardo.")
+            sys.exit(0)
+
+
+# ─── Entry point ──────────────────────────────────────────────────────────────
+
+def main():
+    parser = argparse.ArgumentParser(description="Jarvis assistant")
+    parser.add_argument(
+        "--voice",
+        nargs="?",
+        const="config",  # --voice with no arg → use config.yaml setting
+        choices=["ptt", "wake", "config"],
+        help="Voice mode: ptt (push-to-talk), wake (wake word), or use config",
+    )
+    args = parser.parse_args()
+
+    cfg = load_config()
+    system = build_system_prompt(cfg)
+
+    # Determine mode
+    if args.voice is None:
+        mode = "text"
+    elif args.voice == "config":
+        mode = cfg.get("voice", {}).get("mode", "push_to_talk")
+    else:
+        mode_map = {"ptt": "push_to_talk", "wake": "wake_word"}
+        mode = mode_map.get(args.voice, "push_to_talk")
+
+    if mode == "text":
+        run_text_loop(cfg, system)
+    elif mode == "push_to_talk":
+        run_ptt_loop(cfg, system)
+    elif mode == "wake_word":
+        run_wake_word_loop(cfg, system)
+    else:
+        print(f"Unknown mode '{mode}', falling back to text.")
+        run_text_loop(cfg, system)
 
 
 if __name__ == "__main__":
