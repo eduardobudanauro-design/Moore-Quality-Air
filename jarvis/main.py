@@ -28,6 +28,7 @@ import brain
 import tools as tool_registry
 from tools import ToolError
 import memory
+import heartbeat
 
 
 def load_config() -> dict:
@@ -98,12 +99,29 @@ def run_tool_call(block, cfg: dict) -> str:
         return f"Tool error: {e}"
 
 
+def _surface_inbox() -> str | None:
+    """
+    If the inbox has unseen notices, return a formatted string to prepend to
+    the next Jarvis reply. Returns None if inbox is empty.
+    """
+    count = heartbeat.get_inbox_count()
+    if count == 0:
+        return None
+    word = "notice" if count == 1 else "notices"
+    return f"📬 {count} new {word} in your inbox — say 'check inbox' to see them."
+
+
 def process_turn(user_text: str, history: list[dict], system: str, cfg: dict) -> str:
     """
     One full turn: user text → (tool rounds) → final reply.
     Streams text to stdout. Returns the full reply string.
     Voice callers use the returned string; text callers rely on the streaming print.
     """
+    # Surface inbox count so Eduardo knows something came in
+    inbox_hint = _surface_inbox()
+    if inbox_hint:
+        print(f"\n{inbox_hint}", flush=True)
+
     brain_cfg = cfg["brain"]
     history.append({"role": "user", "content": user_text})
     reply_text = ""
@@ -324,6 +342,10 @@ def main():
 
     cfg = load_config()
     system = build_system_prompt(cfg)
+
+    # Start heartbeat background loop if enabled in config
+    if cfg.get("heartbeat", {}).get("enabled", False):
+        heartbeat.start()
 
     # Determine mode
     if args.voice is None:

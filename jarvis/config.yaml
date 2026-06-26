@@ -28,10 +28,16 @@ confirmation_required:
   - any_irreversible_action
 
 heartbeat:
-  enabled: false          # enabled in Tier 5
-  interval_seconds: 300
+  enabled: true
+  tick_seconds: 60        # how often the engine wakes to check what's due
   quiet_hours_start: "22:00"
   quiet_hours_end: "07:00"
+
+  # Per-check interval overrides (seconds). Remove a key to use the coded default.
+  check_intervals:
+    daily_reminder_scan: 3600    # every hour
+    revenue_nudge: 86400         # once a day
+    stale_notes_alert: 43200     # twice a day
 
 voice:
   enabled: false          # set to true when running Tier 3+
