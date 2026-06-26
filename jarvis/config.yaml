@@ -1,0 +1,46 @@
+# Jarvis configuration — edit here, never in source code
+
+brain:
+  model: claude-sonnet-4-6
+  max_tokens: 1024
+  # Max conversation turns kept in memory before oldest are trimmed
+  max_history_turns: 40
+
+identity:
+  name: Jarvis
+  owner: Eduardo
+  business: InsureTechABQ / ABQ Growth Partners
+  mission: Help Eduardo hit $8K/month
+
+personality: |
+  You are Jarvis, Eduardo's personal business assistant. Your job is to help him
+  build InsureTechABQ (DBA ABQ Growth Partners) and reach $8K/month in revenue.
+  Be warm, casual, and direct — like a sharp friend who's also a business partner.
+  Keep replies concise unless Eduardo asks you to go deep. When you don't know
+  something, say so plainly. When you have an opinion, share it.
+
+# Actions that require explicit confirmation before running
+confirmation_required:
+  - send_message
+  - send_email
+  - post_to_social
+  - spend_money
+  - delete_data
+  - change_setting
+  - any_irreversible_action
+
+heartbeat:
+  enabled: false          # enabled in Tier 5
+  interval_seconds: 300
+  quiet_hours_start: "22:00"
+  quiet_hours_end: "07:00"
+
+voice:
+  enabled: false          # enabled in Tier 3
+  push_to_talk_key: space
+  show_transcript: true
+
+logging:
+  log_file: jarvis.log
+  show_tool_calls: true
+  show_costs: true

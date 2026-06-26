@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+memory/*.json
+jarvis.log
