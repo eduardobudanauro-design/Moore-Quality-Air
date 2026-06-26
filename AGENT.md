@@ -78,6 +78,6 @@ jarvis/
 - [x] Tier 1 — Text conversation loop (streaming, error-safe, history)
 - [x] Tier 2 — Tool registry + notes tools (save, list, search, mark done)
 - [x] Tier 3 — Push-to-talk (spacebar) + wake word "Jarvis" (Deepgram STT + ElevenLabs TTS — Daniel voice)
-- [ ] Tier 4 — Memory across restarts (durable fact store)
+- [x] Tier 4 — Memory across restarts (durable fact store, auto-loaded into system prompt)
 - [ ] Tier 5 — Heartbeat / proactive loop
 - [ ] Tier 6 — Safety rails, confirmation gate, config, audit log

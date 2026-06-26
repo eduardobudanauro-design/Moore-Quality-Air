@@ -71,4 +71,5 @@ class ToolError(Exception):
 
 
 # Import all tool modules so their @tool decorators fire
-from tools import notes  # noqa: E402, F401
+from tools import notes          # noqa: E402, F401
+from tools import memory_tools   # noqa: E402, F401

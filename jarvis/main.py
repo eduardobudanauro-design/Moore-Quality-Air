@@ -27,6 +27,7 @@ load_dotenv(Path(__file__).parent / ".env")
 import brain
 import tools as tool_registry
 from tools import ToolError
+import memory
 
 
 def load_config() -> dict:
@@ -40,15 +41,41 @@ def build_system_prompt(cfg: dict) -> str:
     personality = cfg["personality"].strip()
     tool_names = [t["name"] for t in tool_registry.get_schema_list()]
     tools_str = ", ".join(tool_names) if tool_names else "none yet"
+
+    memory_block = memory.facts_as_prompt_block()
+    memory_section = f"\n\n{memory_block}" if memory_block else ""
+
     return (
         f"{personality}\n\n"
         f"Owner: {identity['owner']}\n"
         f"Business: {identity['business']}\n"
-        f"Mission: {identity['mission']}\n\n"
+        f"Mission: {identity['mission']}"
+        f"{memory_section}\n\n"
         f"Available tools: {tools_str}\n"
         "Use tools whenever they'd give a better answer than guessing. "
-        "Always tell Eduardo what you found or did, not just that you called a tool."
+        "Always tell Eduardo what you found or did, not just that you called a tool.\n"
+        "When Eduardo tells you something worth keeping across sessions — a preference, "
+        "a decision, a key fact — use remember_fact to store it without being asked."
     )
+
+
+def build_greeting(cfg: dict) -> str:
+    """
+    Generate a short opening line for each new session.
+    If memory has facts, Jarvis references them to feel like it knows Eduardo.
+    Returns None if we want a silent start.
+    """
+    facts = memory.load_facts()
+    name = cfg["identity"]["name"]
+
+    if not facts:
+        return f"{name} online. What are we working on?"
+
+    # Pull out any goal/business facts for a context-aware opener
+    business_facts = [f["content"] for f in facts if f.get("category") in ("goal", "business")]
+    if business_facts:
+        return f"Hey Eduardo. {name} here — picking up where we left off. What do you need?"
+    return f"Welcome back, Eduardo. {name} ready. What's on the agenda?"
 
 
 def run_tool_call(block, cfg: dict) -> str:
@@ -144,7 +171,10 @@ def run_text_loop(cfg: dict, system: str) -> None:
     print(f"\n{'='*50}")
     print(f"  {name} — {cfg['identity']['business']}")
     print(f"  Type your message. Ctrl+C or 'quit' to exit.")
-    print(f"{'='*50}\n")
+    print(f"{'='*50}")
+
+    greeting = build_greeting(cfg)
+    print(f"\nJarvis: {greeting}\n")
 
     while True:
         try:
@@ -177,7 +207,14 @@ def run_ptt_loop(cfg: dict, system: str) -> None:
     print(f"\n{'='*50}")
     print(f"  {name} — Push-to-talk mode")
     print(f"  Hold SPACE to speak. Ctrl+C to exit.")
-    print(f"{'='*50}\n")
+    print(f"{'='*50}")
+
+    greeting = build_greeting(cfg)
+    print(f"\nJarvis: {greeting}\n")
+    if greeting:
+        tts_thread = threading.Thread(target=speak, args=(greeting, voice_id), daemon=True)
+        tts_thread.start()
+        tts_thread.join()
 
     while True:
         try:
@@ -228,7 +265,14 @@ def run_wake_word_loop(cfg: dict, system: str) -> None:
     print(f"\n{'='*50}")
     print(f"  {name} — Wake-word mode")
     print(f"  Say 'Jarvis' to activate. Ctrl+C to exit.")
-    print(f"{'='*50}\n")
+    print(f"{'='*50}")
+
+    greeting = build_greeting(cfg)
+    print(f"\nJarvis: {greeting}\n")
+    if greeting:
+        tts_thread = threading.Thread(target=speak, args=(greeting, voice_id), daemon=True)
+        tts_thread.start()
+        tts_thread.join()
 
     while True:
         try:
