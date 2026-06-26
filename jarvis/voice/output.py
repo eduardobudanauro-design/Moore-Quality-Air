@@ -1,7 +1,6 @@
 """
 Voice output — the mouth.
-Calls ElevenLabs API directly via httpx, requests PCM audio, plays with pyaudio.
-No ElevenLabs SDK needed — works with any Python version.
+Calls ElevenLabs API directly via httpx, decodes MP3 with pydub, plays with pyaudio.
 """
 
 import os
@@ -34,23 +33,34 @@ def speak(text: str, voice_id: str = "") -> None:
     interrupt_flag.clear()
     is_speaking.set()
 
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}/stream"
-    headers = {
-        "xi-api-key": key,
-        "Content-Type": "application/json",
-        "Accept": "audio/pcm; sample_rate=44100",
-    }
-    payload = {
-        "text": text,
-        "model_id": "eleven_turbo_v2",
-        "voice_settings": {
-            "stability": 0.5,
-            "similarity_boost": 0.75,
-        },
-        "output_format": "pcm_44100",
-    }
-
     try:
+        response = httpx.post(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}",
+            headers={
+                "xi-api-key": key,
+                "Content-Type": "application/json",
+            },
+            json={
+                "text": text,
+                "model_id": "eleven_turbo_v2",
+                "voice_settings": {
+                    "stability": 0.5,
+                    "similarity_boost": 0.75,
+                },
+            },
+            timeout=30,
+        )
+
+        if response.status_code != 200:
+            print(f"\n  [TTS error: HTTP {response.status_code}]", flush=True)
+            return
+
+        # Decode MP3 using pydub + ffmpeg
+        from pydub import AudioSegment
+        audio = AudioSegment.from_mp3(io.BytesIO(response.content))
+        audio = audio.set_frame_rate(44100).set_channels(1).set_sample_width(2)
+        pcm_data = audio.raw_data
+
         pa = pyaudio.PyAudio()
         stream = pa.open(
             format=pyaudio.paInt16,
@@ -61,16 +71,11 @@ def speak(text: str, voice_id: str = "") -> None:
         )
 
         try:
-            with httpx.stream("POST", url, headers=headers, json=payload, timeout=30) as response:
-                if response.status_code != 200:
-                    body = response.read()
-                    print(f"\n  [TTS error: HTTP {response.status_code} — {body[:200]}]", flush=True)
-                    return
-                for chunk in response.iter_bytes(chunk_size=4096):
-                    if interrupt_flag.is_set():
-                        break
-                    if chunk:
-                        stream.write(chunk)
+            chunk_size = 4096
+            for i in range(0, len(pcm_data), chunk_size):
+                if interrupt_flag.is_set():
+                    break
+                stream.write(pcm_data[i:i + chunk_size])
         finally:
             stream.stop_stream()
             stream.close()
