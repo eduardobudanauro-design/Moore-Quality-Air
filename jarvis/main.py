@@ -155,7 +155,15 @@ def process_turn(
         total_input_tokens = 0
         total_output_tokens = 0
 
-        print(f"\nJarvis: ", end="", flush=True)
+        show_thinking_fn = None
+        try:
+            import visual as _v
+            _v.show_thinking()
+            show_thinking_fn = _v
+        except ImportError:
+            print(f"\nJarvis: ", end="", flush=True)
+
+        first_token = True
 
         for event_type, data in brain.ask_brain_stream(
             messages=history,
@@ -165,7 +173,14 @@ def process_turn(
             max_tokens=brain_cfg["max_tokens"],
         ):
             if event_type == "text":
-                print(data, end="", flush=True)
+                if show_thinking_fn and first_token:
+                    show_thinking_fn.stop()
+                    show_thinking_fn.print_jarvis_start()
+                    first_token = False
+                if show_thinking_fn:
+                    show_thinking_fn.print_jarvis_chunk(data)
+                else:
+                    print(data, end="", flush=True)
                 text_chunks.append(data)
             elif event_type == "tool_use":
                 tool_calls.append(data)
@@ -186,7 +201,10 @@ def process_turn(
             safety.log_cost(total_input_tokens, total_output_tokens, brain_cfg["model"])
 
         if not tool_calls:
-            print()
+            if show_thinking_fn:
+                show_thinking_fn.print_jarvis_end()
+            else:
+                print()
             break
 
         history.append({"role": "assistant", "content": final_message.content})
@@ -256,25 +274,23 @@ def run_text_loop(cfg: dict, system: str) -> None:
 def run_ptt_loop(cfg: dict, system: str) -> None:
     from voice.input import listen_push_to_talk
     from voice.output import speak, interrupt_speech, is_speaking
+    import visual
 
     history: list[dict] = []
     name = cfg["identity"]["name"]
     voice_cfg = cfg.get("voice", {})
     voice_id = voice_cfg.get("tts_voice_id", "")
-    show_transcript = voice_cfg.get("show_transcript", True)
     speak_fn = lambda text: speak(text, voice_id)
 
-    print(f"\n{'='*50}")
-    print(f"  {name} — Push-to-talk mode")
-    print(f"  Hold SPACE to speak. Ctrl+C to exit.")
-    print(f"{'='*50}")
+    visual.print_header()
 
     greeting = build_greeting(cfg)
-    print(f"\nJarvis: {greeting}\n")
+    visual.print_jarvis_start()
+    print(greeting, flush=True)
     if greeting:
-        t = threading.Thread(target=speak, args=(greeting, voice_id), daemon=True)
-        t.start()
-        t.join()
+        visual.show_speaking()
+        speak(greeting, voice_id)
+        visual.stop()
 
     while True:
         try:
@@ -282,25 +298,26 @@ def run_ptt_loop(cfg: dict, system: str) -> None:
                 interrupt_speech()
                 is_speaking.wait(timeout=0.5)
 
+            visual.show_listening()
             transcript = listen_push_to_talk(
-                on_listening=lambda: print("  [Recording…]", flush=True)
+                on_listening=visual.show_recording
             )
+            visual.stop()
 
             if not transcript:
                 print("  (didn't catch that — try again)\n")
                 continue
 
-            if show_transcript:
-                print(f"\nYou said: {transcript}")
-
+            visual.print_you(transcript)
             reply = process_turn(transcript, history, system, cfg, speak_fn=speak_fn)
 
             if reply:
-                t = threading.Thread(target=speak, args=(reply, voice_id), daemon=True)
-                t.start()
-                t.join()  # wait for Daniel to finish before listening again
+                visual.show_speaking()
+                speak(reply, voice_id)
+                visual.stop()
 
         except KeyboardInterrupt:
+            visual.stop()
             interrupt_speech()
             safety.log_session_end()
             print(f"\n\n{name}: Catch you later, Eduardo.")
