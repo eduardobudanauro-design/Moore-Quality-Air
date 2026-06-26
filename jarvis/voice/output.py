@@ -55,11 +55,21 @@ def speak(text: str, voice_id: str = "") -> None:
             print(f"\n  [TTS error: HTTP {response.status_code}]", flush=True)
             return
 
-        # Decode MP3 using pydub + ffmpeg
-        from pydub import AudioSegment
-        audio = AudioSegment.from_mp3(io.BytesIO(response.content))
-        audio = audio.set_frame_rate(44100).set_channels(1).set_sample_width(2)
-        pcm_data = audio.raw_data
+        # Decode MP3 to raw PCM using ffmpeg subprocess (avoids audioop / pydub)
+        import subprocess
+        result = subprocess.run(
+            [
+                "ffmpeg", "-y",
+                "-i", "pipe:0",
+                "-f", "s16le",
+                "-ar", "44100",
+                "-ac", "1",
+                "pipe:1",
+            ],
+            input=response.content,
+            capture_output=True,
+        )
+        pcm_data = result.stdout
 
         pa = pyaudio.PyAudio()
         stream = pa.open(
