@@ -1,10 +1,11 @@
 """
 Voice output — the mouth.
-Requests PCM audio directly from ElevenLabs (output_format=pcm_44100),
-plays raw bytes with pyaudio. No ffmpeg, no pydub, no audioop needed.
+Fetches MP3 from ElevenLabs, decodes to raw PCM via ffmpeg subprocess,
+plays with pyaudio. No pydub or audioop needed.
 """
 
 import os
+import subprocess
 import threading
 import httpx
 import pyaudio
@@ -13,6 +14,15 @@ is_speaking = threading.Event()
 interrupt_flag = threading.Event()
 
 DEFAULT_VOICE_ID = "onwK4e9ZLuTAKqWW03F9"  # Daniel (British, deep)
+
+
+def _mp3_to_pcm(mp3_bytes: bytes) -> bytes:
+    result = subprocess.run(
+        ["ffmpeg", "-y", "-i", "pipe:0", "-f", "s16le", "-ar", "44100", "-ac", "1", "pipe:1"],
+        input=mp3_bytes,
+        capture_output=True,
+    )
+    return result.stdout
 
 
 def speak(text: str, voice_id: str = "") -> None:
@@ -35,7 +45,7 @@ def speak(text: str, voice_id: str = "") -> None:
 
     try:
         response = httpx.post(
-            f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}?output_format=pcm_44100",
+            f"https://api.elevenlabs.io/v1/text-to-speech/{resolved_voice}",
             headers={
                 "xi-api-key": key,
                 "Content-Type": "application/json",
@@ -55,7 +65,10 @@ def speak(text: str, voice_id: str = "") -> None:
             print(f"\n  [TTS error: HTTP {response.status_code}]", flush=True)
             return
 
-        pcm_data = response.content
+        pcm_data = _mp3_to_pcm(response.content)
+        if not pcm_data:
+            print("\n  [TTS error: ffmpeg produced no audio]", flush=True)
+            return
 
         pa = pyaudio.PyAudio()
         stream = pa.open(
@@ -65,7 +78,6 @@ def speak(text: str, voice_id: str = "") -> None:
             output=True,
             frames_per_buffer=4096,
         )
-
         try:
             chunk_size = 4096
             for i in range(0, len(pcm_data), chunk_size):
