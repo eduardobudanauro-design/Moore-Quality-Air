@@ -1,8 +1,10 @@
-# LLM Council — A Claude Code Skill
+# LLM Council — InsureTech ABQ War Room (a Claude Code Skill)
 
-Stop trusting Claude's first answer. Run any decision through 5 AI advisors who argue, peer-review each other anonymously, and hand you a verdict you can actually trust.
+Stop trusting Claude's first answer. Run any decision through 5 **world-class advisors** — each a top-0.1% expert in Marketing, Design, Sales, Growth, and AI Technology — who argue, peer-review each other anonymously, and hand you a verdict you can actually trust.
 
-Based on [Andrej Karpathy's LLM Council](https://x.com/karpathy/status/1962263486196867115) methodology, adapted to run entirely inside Claude Code using sub-agents with different thinking styles.
+Based on [Andrej Karpathy's LLM Council](https://x.com/karpathy/status/1962263486196867115) methodology, adapted to run entirely inside Claude Code using sub-agents — here tuned into an elite, multi-disciplinary war room for **InsureTech ABQ**.
+
+> **Tune it to your company:** edit `company-context.md` in this folder. The council reads it before every session — the more accurate it is, the sharper the advice. Replace the `[FILL IN]` placeholders with real details about InsureTech ABQ.
 
 ---
 
@@ -18,12 +20,12 @@ When you say **"council this"**, the skill:
 
 1. **Scans your workspace** for relevant context (CLAUDE.md, memory files, etc.)
 2. **Frames your question** into a neutral prompt
-3. **Spawns 5 advisors in parallel**, each with a different thinking style:
-   - **The Contrarian** — hunts for what will fail
-   - **The First Principles Thinker** — asks if you're solving the right problem
-   - **The Expansionist** — looks for upside you're missing
-   - **The Outsider** — responds with zero context (catches curse of knowledge)
-   - **The Executor** — only cares what you do Monday morning
+3. **Spawns 5 advisors in parallel**, each a **top-0.1% expert** in their field:
+   - **The Marketing Virtuoso** — positioning, brand, messaging, demand gen
+   - **The Design Master** — product/UX/visual & conversion design, trust signals
+   - **The Sales Closer** — pipeline, objections, pricing, closing
+   - **The Growth Architect** — channels, funnels, retention, unit economics
+   - **The AI Technology Visionary** — applied AI/LLMs, automation, build-vs-buy
 4. **Anonymizes their responses** and runs a peer review — advisors review each other without knowing who said what
 5. **Chairman synthesizes** the verdict: where the council agrees, where it clashes, blind spots it caught, a clear recommendation, and one concrete next step
 6. **Generates a visual HTML report** + full markdown transcript
