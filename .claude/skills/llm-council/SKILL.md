@@ -76,9 +76,14 @@ Owns the technology, with deep specialization in **AI**: applied LLMs, agents, a
 
 InsureTech ABQ is the client this council serves. Before framing any question, the council must ground itself in the company's reality.
 
-**Always do this first:** Read `company-context.md` in this skill's folder (`.claude/skills/llm-council/company-context.md`) if it exists, plus any `CLAUDE.md`, `memory/` files, or context the user references. That file is the source of truth for what InsureTech ABQ is, who it serves, its stage, its offers, and its goals. Feed the relevant pieces into the framed question so advisors give specific, grounded advice instead of generic takes.
+**Always do this first:** Read the context files in this skill's folder (`.claude/skills/llm-council/`):
 
-If `company-context.md` is missing or thin and the question depends on company specifics the advisors don't have, ask the user one sharp clarifying question to fill the gap, then proceed.
+- `company-context.md` — the **InsureTech ABQ** umbrella and its insurtech/edtech products
+- `abq-growth-partners-context.md` — the **ABQ Growth Partners** DBA (social media marketing for small businesses)
+
+Load both (glob `*-context.md` / `company-context*.md`), plus any `CLAUDE.md`, `memory/` files, or context the user references. These files are the source of truth for what the business is, who it serves, its stage, its offers, and its goals. When a question is specifically about one line of business, lean on that line's file as primary. Feed the relevant pieces into the framed question so advisors give specific, grounded advice instead of generic takes.
+
+If the relevant context file is missing or thin and the question depends on company specifics the advisors don't have, ask the user one sharp clarifying question to fill the gap, then proceed.
 
 ---
 
@@ -90,7 +95,7 @@ When the user says "council this" (or any trigger phrase), do two things before 
 
 **A. Scan the workspace for context.** The user's question is often just the tip of the iceberg. Before framing, quickly scan for and read any relevant context files:
 
-- `company-context.md` in this skill's folder (the InsureTech ABQ source of truth — always check this first)
+- `company-context.md` and `abq-growth-partners-context.md` in this skill's folder (the InsureTech ABQ and ABQ Growth Partners sources of truth — always check these first)
 - `CLAUDE.md` or `claude.md` in the project root or workspace (business context, preferences, constraints)
 - Any `memory/` folder (audience profiles, voice docs, business details, past decisions)
 - Any files the user explicitly referenced or attached

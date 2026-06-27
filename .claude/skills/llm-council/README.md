@@ -4,7 +4,9 @@ Stop trusting Claude's first answer. Run any decision through 5 **world-class ad
 
 Based on [Andrej Karpathy's LLM Council](https://x.com/karpathy/status/1962263486196867115) methodology, adapted to run entirely inside Claude Code using sub-agents — here tuned into an elite, multi-disciplinary war room for **InsureTech ABQ**.
 
-> **Tune it to your company:** edit `company-context.md` in this folder. The council reads it before every session — the more accurate it is, the sharper the advice. Replace the `[FILL IN]` placeholders with real details about InsureTech ABQ.
+> **Tune it to your company:** the council reads these context files before every session — the more accurate they are, the sharper the advice. Replace the `[FILL IN]` placeholders.
+> - `company-context.md` — the **InsureTech ABQ** umbrella + insurtech/edtech products
+> - `abq-growth-partners-context.md` — the **ABQ Growth Partners** DBA (social media marketing for small businesses)
 
 ---
 
