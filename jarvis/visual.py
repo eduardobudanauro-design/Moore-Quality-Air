@@ -1,6 +1,6 @@
 """
-Terminal visual layer — animated states for the PTT loop.
-Uses only ANSI escape codes; no extra dependencies.
+Terminal visual layer + web UI bridge.
+Animates the terminal and pushes state to the browser orb via web_ui.
 """
 
 import sys
@@ -8,7 +8,6 @@ import threading
 import time
 import itertools
 
-# ANSI colors
 CYAN   = "\033[96m"
 BLUE   = "\033[94m"
 GREEN  = "\033[92m"
@@ -29,6 +28,14 @@ HEADER = f"""
 
 _anim_stop = threading.Event()
 _anim_thread = None
+
+
+def _web(fn_name: str, *args):
+    try:
+        import web_ui
+        getattr(web_ui, fn_name)(*args)
+    except Exception:
+        pass
 
 
 def _stop_anim():
@@ -63,6 +70,11 @@ def print_header():
     print(HEADER, flush=True)
 
 
+def stop():
+    _stop_anim()
+    _web("set_status", "idle")
+
+
 def show_listening():
     frames = [
         "  ○  Hold SPACE to speak   ",
@@ -71,6 +83,7 @@ def show_listening():
         "  ◌  Hold SPACE to speak   ",
     ]
     _start_anim(frames, DIM, delay=0.5)
+    _web("set_status", "listening")
 
 
 def show_recording():
@@ -84,6 +97,7 @@ def show_recording():
         "  ◉  Recording  ▁▃▅▇▅▃▁    ",
     ]
     _start_anim(frames, GREEN, delay=0.1)
+    _web("set_status", "recording")
 
 
 def show_thinking():
@@ -98,6 +112,7 @@ def show_thinking():
         "  ⠧  Thinking ...          ",
     ]
     _start_anim(frames, CYAN, delay=0.1)
+    _web("set_status", "thinking")
 
 
 def show_speaking():
@@ -111,6 +126,7 @@ def show_speaking():
         "  ♪  Daniel  ▁▂▃▄▃▂▁      ",
     ]
     _start_anim(frames, BLUE, delay=0.1)
+    _web("set_status", "speaking")
 
 
 def show_transcribing():
@@ -121,24 +137,24 @@ def show_transcribing():
         "  ◎  Transcribing ...      ",
     ]
     _start_anim(frames, YELLOW, delay=0.15)
-
-
-def stop():
-    _stop_anim()
+    _web("set_status", "thinking")
 
 
 def print_you(text: str):
     _stop_anim()
     print(f"\n  {GREEN}{BOLD}You:{RESET}  {WHITE}{text}{RESET}", flush=True)
+    _web("set_you_text", text)
 
 
 def print_jarvis_start():
     _stop_anim()
     print(f"\n  {CYAN}{BOLD}Jarvis:{RESET} ", end="", flush=True)
+    _web("set_jarvis_text", "")
 
 
 def print_jarvis_chunk(text: str):
     print(f"{CYAN}{text}{RESET}", end="", flush=True)
+    _web("append_jarvis_chunk", text)
 
 
 def print_jarvis_end():

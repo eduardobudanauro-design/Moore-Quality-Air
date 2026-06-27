@@ -412,6 +412,10 @@ def main():
     if cfg.get("heartbeat", {}).get("enabled", False):
         heartbeat.start()
 
+    if mode in ("push_to_talk", "wake_word"):
+        import web_ui
+        web_ui.start(open_browser=True)
+
     if mode == "text":
         run_text_loop(cfg, system)
     elif mode == "push_to_talk":
