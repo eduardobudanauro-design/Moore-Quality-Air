@@ -74,3 +74,4 @@ class ToolError(Exception):
 from tools import notes             # noqa: E402, F401
 from tools import memory_tools      # noqa: E402, F401
 from tools import heartbeat_tools   # noqa: E402, F401
+from tools import blotato           # noqa: E402, F401
