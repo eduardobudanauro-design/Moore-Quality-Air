@@ -24,7 +24,7 @@ def _headers() -> dict:
     name="search_mem",
     description=(
         "Search Eduardo's Mem notes and return matching content. "
-        "Use this when Eduardo asks questions about his notes, ideas, or anything he's saved in Mem."
+        "Use this when Eduardo asks questions about his notes, ideas, or anything saved in Mem."
     ),
     input_schema={
         "type": "object",
@@ -38,23 +38,24 @@ def _headers() -> dict:
     },
 )
 def search_mem(query: str) -> str:
-    r = httpx.get(
-        f"{BASE}/mems",
+    r = httpx.post(
+        f"{BASE}/mem/search",
         headers=_headers(),
-        params={"query": query, "limit": 5},
+        json={"query": query, "limit": 5},
         timeout=20,
     )
     if r.status_code != 200:
-        return f"Mem search error {r.status_code}: {r.text[:200]}"
+        # Fallback: try listing all and let Jarvis filter
+        return list_mem_notes(limit=10)
 
     data = r.json()
-    results = data if isinstance(data, list) else data.get("mems", data.get("results", []))
+    results = data if isinstance(data, list) else data.get("mems", data.get("results", data.get("data", [])))
     if not results:
         return "No matching notes found in Mem."
 
     lines = []
     for m in results[:5]:
-        content = m.get("content", m.get("body", m.get("text", ""))).strip()[:300]
+        content = m.get("content", m.get("body", m.get("text", ""))).strip()[:400]
         lines.append(f"---\n{content}")
     return "\n".join(lines)
 
@@ -63,7 +64,7 @@ def search_mem(query: str) -> str:
     name="save_to_mem",
     description=(
         "Save a new note to Eduardo's Mem workspace. "
-        "Use this when Eduardo wants to capture an idea, thought, or piece of information in Mem."
+        "Use when Eduardo wants to capture an idea, thought, or information in Mem."
     ),
     input_schema={
         "type": "object",
@@ -78,14 +79,14 @@ def search_mem(query: str) -> str:
 )
 def save_to_mem(content: str) -> str:
     r = httpx.post(
-        f"{BASE}/mems",
+        f"{BASE}/mem",
         headers=_headers(),
         json={"content": content},
         timeout=20,
     )
     if r.status_code in (200, 201):
         return "Saved to Mem."
-    return f"Mem save error {r.status_code}: {r.text[:200]}"
+    return f"Mem save error {r.status_code}: {r.text[:300]}"
 
 
 @tool(
@@ -104,16 +105,16 @@ def save_to_mem(content: str) -> str:
 )
 def list_mem_notes(limit: int = 10) -> str:
     r = httpx.get(
-        f"{BASE}/mems",
+        f"{BASE}/mem",
         headers=_headers(),
         params={"limit": limit},
         timeout=20,
     )
     if r.status_code != 200:
-        return f"Mem error {r.status_code}: {r.text[:200]}"
+        return f"Mem error {r.status_code}: {r.text[:300]}"
 
     data = r.json()
-    mems = data if isinstance(data, list) else data.get("mems", data.get("results", []))
+    mems = data if isinstance(data, list) else data.get("mems", data.get("results", data.get("data", [])))
     if not mems:
         return "No notes found in Mem."
 
