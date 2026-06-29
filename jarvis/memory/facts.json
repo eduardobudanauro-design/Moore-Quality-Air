@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "content": "Eduardo runs InsureTechABQ, DBA ABQ Growth Partners — an insurance tech business",
+    "category": "business",
+    "created": "2026-06-26T01:04:00"
+  },
+  {
+    "id": 2,
+    "content": "Eduardo revenue target is $8K/month",
+    "category": "goal",
+    "created": "2026-06-26T01:04:00"
+  },
+  {
+    "id": 3,
+    "content": "Eduardo prefers warm, casual communication",
+    "category": "preference",
+    "created": "2026-06-26T01:04:00"
+  },
+  {
+    "id": 4,
+    "content": "Eduardo uses this assistant on his iMac and MacBook (both macOS)",
+    "category": "identity",
+    "created": "2026-06-26T01:04:00"
+  },
+  {
+    "id": 5,
+    "content": "Eduardo is also working on Moore Quality Air website — a family-owned HVAC + plumbing company in Albuquerque, NM. Live preview: https://eduardobudanauro-design.github.io/Moore-Quality-Air/. Phone: 505-221-6352. Owners: Jonathan McDaniel (founder 2013) and Anthony Hughes (partnered 2015). Outstanding: real photos needed, contact form needs Formspree ID, domain cutover pending.",
+    "category": "project",
+    "created": "2026-06-29T00:00:00"
+  },
+  {
+    "id": 6,
+    "content": "Eduardo's voice and writing profile: AI educator, business growth coach, 30+ year insurance veteran. Writing style: facts first, build to the point, short sentences for impact, flowing paragraphs default. Core values: honor, integrity, truth, ethics. Motto: 'Edutainment — entertain, educate, equip. All three or it is not finished.' Never: punch down, fake stats, say AI makes money easy.",
+    "category": "identity",
+    "created": "2026-06-29T00:00:00"
+  },
+  {
+    "id": 7,
+    "content": "InsurePass is Eduardo's product to solve the insurance industry licensing barrier problem — the industry treats retention as a people problem but it is actually a licensing barrier problem.",
+    "category": "business",
+    "created": "2026-06-29T00:00:00"
+  },
+  {
+    "id": 8,
+    "content": "Moore Quality Air services: HVAC (swamp cooler repair/install, swamp-to-refrigerated-air conversions = specialty, AC, gas furnaces, heat pumps, smart thermostats) + fixture plumbing (water heaters, faucets, toilets). Service area: Albuquerque, Rio Rancho, Corrales, Placitas ONLY. NO 24/7 service (Mon-Fri 8AM-5PM). Residential only.",
+    "category": "project",
+    "created": "2026-06-29T00:00:00"
+  }
+]
