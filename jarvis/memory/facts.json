@@ -25,7 +25,7 @@
   },
   {
     "id": 5,
-    "content": "Eduardo is also working on Moore Quality Air website — a family-owned HVAC + plumbing company in Albuquerque, NM. Live preview: https://eduardobudanauro-design.github.io/Moore-Quality-Air/. Phone: 505-221-6352. Owners: Jonathan McDaniel (founder 2013) and Anthony Hughes (partnered 2015). Outstanding: real photos needed, contact form needs Formspree ID, domain cutover pending.",
+    "content": "Moore Quality Air V2 website project — live at https://eduardobudanauro-design.github.io/Moore-Quality-Air/. Repo: eduardobudanauro-design/Moore-Quality-Air. Multi-page static site (HTML/CSS/JS). Hosting: GitHub Pages. Outstanding: real job photos needed for Gallery/hero, contact form needs Formspree ID, domain cutover to moorequalityair.com pending (old site still live there). Logo is hand-built SVG tornado funnel. Need original logo file for pixel-exact swap.",
     "category": "project",
     "created": "2026-06-29T00:00:00"
   },
@@ -43,7 +43,13 @@
   },
   {
     "id": 8,
-    "content": "Moore Quality Air services: HVAC (swamp cooler repair/install, swamp-to-refrigerated-air conversions = specialty, AC, gas furnaces, heat pumps, smart thermostats) + fixture plumbing (water heaters, faucets, toilets). Service area: Albuquerque, Rio Rancho, Corrales, Placitas ONLY. NO 24/7 service (Mon-Fri 8AM-5PM). Residential only.",
+    "content": "Moore Quality Air — confirmed business facts: Phone 505-221-6352. Address 3301-R Coors Blvd NW Suite 200 Albuquerque NM 87120. Hours Mon-Fri 8AM-5PM, NO 24/7 (emergency only for existing customers). Service area: Albuquerque, Rio Rancho, Corrales, Los Lunas ONLY (NOT Bernalillo, Placitas, Santa Fe, East Mountains). Owners: Jonathan McDaniel founder 2013, Anthony Hughes partnered 2015. Tagline: Comfort Is Just a Call Away.",
+    "category": "project",
+    "created": "2026-06-29T00:00:00"
+  },
+  {
+    "id": 9,
+    "content": "Moore Quality Air services: HVAC (swamp cooler repair/install, swamp-cooler to refrigerated-air conversions = specialty, AC, gas furnaces, heat pumps, IAQ, smart thermostats) + fixture plumbing (water heaters, tankless, faucets, toilets, hose bibs, disposals). Residential only. Does NOT do drain snaking, sewer, slab leaks, or commercial sprinklers. Credentials: NM MM-98, EE-98, Universal EPA, Rheem Pro Partner, Energy Star, NATE, HomeAdvisor Best of 2017 & 2018. Promos: 0% financing, Inventory Blowout Sale, veteran/military/senior discounts.",
     "category": "project",
     "created": "2026-06-29T00:00:00"
   }
