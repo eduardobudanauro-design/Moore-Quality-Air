@@ -13,7 +13,11 @@ def _headers() -> dict:
     key = os.environ.get("MEM_API_KEY")
     if not key:
         raise EnvironmentError("MEM_API_KEY not set in jarvis/.env")
-    return {"Authorization": f"ApiAccessToken {key}", "Content-Type": "application/json"}
+    return {
+        "Authorization": f"ApiAccessToken {key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
 
 
 @tool(
@@ -34,22 +38,23 @@ def _headers() -> dict:
     },
 )
 def search_mem(query: str) -> str:
-    r = httpx.post(
-        f"{BASE}/mems/search",
+    r = httpx.get(
+        f"{BASE}/mems",
         headers=_headers(),
-        json={"query": query},
+        params={"query": query, "limit": 5},
         timeout=20,
     )
     if r.status_code != 200:
         return f"Mem search error {r.status_code}: {r.text[:200]}"
 
-    results = r.json().get("mems", [])
+    data = r.json()
+    results = data if isinstance(data, list) else data.get("mems", data.get("results", []))
     if not results:
         return "No matching notes found in Mem."
 
     lines = []
     for m in results[:5]:
-        content = m.get("content", "").strip()[:300]
+        content = m.get("content", m.get("body", m.get("text", ""))).strip()[:300]
         lines.append(f"---\n{content}")
     return "\n".join(lines)
 
@@ -107,12 +112,14 @@ def list_mem_notes(limit: int = 10) -> str:
     if r.status_code != 200:
         return f"Mem error {r.status_code}: {r.text[:200]}"
 
-    mems = r.json().get("mems", [])
+    data = r.json()
+    mems = data if isinstance(data, list) else data.get("mems", data.get("results", []))
     if not mems:
         return "No notes found in Mem."
 
     lines = []
     for m in mems:
-        snippet = m.get("content", "").strip().split("\n")[0][:120]
+        content = m.get("content", m.get("body", m.get("text", ""))).strip()
+        snippet = content.split("\n")[0][:120]
         lines.append(f"• {snippet}")
     return "\n".join(lines)
