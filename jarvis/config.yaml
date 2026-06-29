@@ -51,7 +51,7 @@ voice:
   wake_word: "jarvis"
   wake_word_sensitivity: 0.5   # 0.0 = less sensitive, 1.0 = most sensitive
   show_transcript: true        # print what Jarvis heard (good for debugging)
-  tts_voice_id: "onwK4e9ZLuTAKqWW03F9"  # Daniel — deep British male (ElevenLabs)
+  tts_voice_id: "pNInz6obpgDQGcFmaJgB"  # Adam — deep American male (ElevenLabs)
   mode: push_to_talk           # push_to_talk | wake_word | text
 
 # ── Logging / audit ───────────────────────────────────────────────────────────

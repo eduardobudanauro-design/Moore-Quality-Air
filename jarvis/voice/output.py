@@ -13,7 +13,7 @@ import pyaudio
 is_speaking = threading.Event()
 interrupt_flag = threading.Event()
 
-DEFAULT_VOICE_ID = "onwK4e9ZLuTAKqWW03F9"  # Daniel (British, deep)
+DEFAULT_VOICE_ID = "pNInz6obpgDQGcFmaJgB"  # Adam (American, deep)
 
 
 def _mp3_to_pcm(mp3_bytes: bytes) -> bytes:
