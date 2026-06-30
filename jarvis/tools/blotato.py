@@ -7,7 +7,7 @@ import os
 import httpx
 from tools import tool
 
-BASE = "https://api.blotato.com/v1"
+BASE = "https://backend.blotato.com/v2"
 
 
 def _headers() -> dict:
