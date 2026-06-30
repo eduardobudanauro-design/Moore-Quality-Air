@@ -14,7 +14,7 @@ def _headers() -> dict:
     key = os.environ.get("BLOTATO_API_KEY")
     if not key:
         raise EnvironmentError("BLOTATO_API_KEY not set in jarvis/.env")
-    return {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    return {"blotato-api-key": key, "Content-Type": "application/json"}
 
 
 def _get_accounts() -> list[dict]:
